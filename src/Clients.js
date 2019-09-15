@@ -55,6 +55,16 @@ class Clients extends Component {
 
   updateForm = (e) => this.setState({ form: { ...this.state.form, [e.target.name]: e.target.value } });
 
+  handleDeleteClient = (id) => {
+    const { state: { localClients } } = this;
+
+    if (! confirm('Are you sure?')) return; // eslint-disable-line no-restricted-globals
+
+    this.props.deleteClient(id);
+
+    this.setState({ localClients: localClients.filter((c) => c.id !== id) });
+  };
+
   render() {
     const { 
       state: { searchText, localClients, showModal, form, nameRef },
@@ -121,8 +131,9 @@ class Clients extends Component {
 
   renderClientListItem = ({ id, name }) =>
     (
-      <Item key={id}>
-        {name}
+      <Item key={id} className="d-flex justify-content-between align-items-center">
+        <span>{name}</span>
+        <button onClick={_ => this.handleDeleteClient(id)} className="close">&times;</button>
       </Item>
     );
 
