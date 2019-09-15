@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { array, func } from 'prop-types';
 import ListGroup, { Item } from 'react-bootstrap/ListGroup';
-import { Control } from 'react-bootstrap/Form';
+import { Control, Label } from 'react-bootstrap/Form';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import Button from 'react-bootstrap/Button';
@@ -24,38 +24,53 @@ class Clients extends Component {
       gender: 'female',
       phone: ''
     },
-    showModal: false
+    showModal: false,
+    nameRef: React.createRef()
   };
 
   handleSearchTextChange = (e) => {
     const searchText = e.target.value.trim(),
-      localClients = this.props.clients.filter(({ name }) => name.includes(searchText));
+      localClients = this.props.clients.filter(({ name }) => name.toLowerCase().includes(searchText.toLowerCase()));
     
     this.setState({ searchText, localClients });
   }
 
-  openModal = () => this.setState({ showModal: true });
+  openModal = () => this.setState({ showModal: true }, () => this.state.nameRef.current.focus());
 
-  closeModal = () => this.setState({ showModal: false });
+  closeModal = () => this.setState({ showModal: false, form: { name: '', gender: 'female', phone: '' } });
 
   createClient = () => {
+    this.props.saveClient(this.state.form);
     this.closeModal();
   };
 
+  isFormValid = () => {
+    const { state: { form: { gender, name, phone } }, props: { clients } } = this;
+
+    return !!name && 
+      /^\d{7,11}$/.test(phone.trim()) && 
+      ['male', 'female'].includes(gender) && 
+      clients.every((c) => c.phone !== phone.trim());
+  };
+
+  updateForm = (e) => this.setState({ form: { ...this.state.form, [e.target.name]: e.target.value } });
+
   render() {
     const { 
-      state: { searchText, localClients, showModal },
+      state: { searchText, localClients, showModal, form, nameRef },
       openModal,
       closeModal,
       createClient,
       handleSearchTextChange,
       renderClientListItem,
-      renderEmptyView
+      renderEmptyView,
+      updateForm,
+      isFormValid
     } = this;
 
     return (
       <Row>
-        <Col sm={{ span: 3, offset: 9 }} className="mb-3">
+        <Col sm={3} className="mb-3">
           <Button size="sm" variant="outline-primary" onClick={openModal}>Create client</Button>
 
           <Modal show={showModal} onHide={closeModal} animation={false}>
@@ -63,18 +78,30 @@ class Clients extends Component {
               <Title>Create client</Title>
             </Header>
             <Body>
-              Body goes here...
+              <Label className="mt-2">Name</Label>
+              <Control ref={nameRef} name="name" type="text" placeholder="Name" value={form.name} onChange={updateForm} />
+
+              <Label className="mt-2">Phone number</Label>
+              <Control name="phone" type="text" placeholder="Phone number" value={form.phone} onChange={updateForm} />
+
+              <Label className="mt-2">Gender</Label>
+              <Control name="gender" as="select" value={form.gender} onChange={updateForm}>
+                <option disabled>Select gender</option>
+                <option value="female">Female</option>
+                <option value="male">Male</option>
+              </Control>
             </Body>
             <Footer>
               <Button size="sm" variant="outline-secondary" onClick={closeModal}>
                 Close
               </Button>
-              <Button size="sm" variant="outline-primary" onClick={createClient}>
+              <Button disabled={!isFormValid()} size="sm" variant="outline-primary" onClick={createClient}>
                 Create
               </Button>
             </Footer>
           </Modal>
         </Col>
+
         <Col sm={12}>
           <ListGroup variant="flush">
             <Item>

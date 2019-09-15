@@ -9,6 +9,7 @@ const clientReducer = (state = defaultState, { type, payload }) => {
 
       if (!payload.id) {
         payload.id = clients.length + 1;
+        payload.measurements = [];
         clients.push(payload);
       } else {
         clients.splice(payload.id - 1, 1, payload);
