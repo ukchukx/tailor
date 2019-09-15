@@ -1,26 +1,26 @@
 import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import { HashRouter, Link } from 'react-router-dom';
+import { Provider } from 'react-redux';
+import Navbar, { Brand } from 'react-bootstrap/Navbar';
+import Routes from './Routes';
+import initStore from './store';
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
-}
+/* eslint-disable react/prop-types */
+const App = () => (
+  <Provider store={initStore()}>
+    <HashRouter>
+      <div className="container-fluid">
+        <header>
+          <Navbar collapseOnSelect expand="lg">
+            <Brand as={Link} to="/clients">Tailor</Brand>
+          </Navbar>
+        </header>
+        <main style={{ marginTop: '10px' }}>
+          <Routes />
+        </main>
+      </div>
+    </HashRouter>
+  </Provider>
+);
 
 export default App;
