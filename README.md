@@ -1,6 +1,9 @@
-## Tailor
+# Tailor
 
 An offline PWA to help tailors store client measurements.
+Tutorial [here](https://bowlsofsalt.com/pwa-for-tailors-with-react-and-indexeddb/).
+
+## Scripts
 
 ### `npm start`
 
