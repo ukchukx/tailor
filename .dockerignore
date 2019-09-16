@@ -1,0 +1,10 @@
+.git
+node_modules
+src
+public
+README.md
+LICENSE
+Dockerfile
+.dockerignore
+.gitignore
+package*.json

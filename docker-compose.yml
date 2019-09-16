@@ -1,0 +1,8 @@
+version: '3'
+services:
+  tailor:
+    build: .
+    image: tailor
+    container_name: tailor
+    restart: unless-stopped
+    network_mode: host
