@@ -65,6 +65,8 @@ class Clients extends Component {
     this.setState({ localClients: localClients.filter((c) => c.id !== id) });
   };
 
+  viewClient = (id) => this.props.history.push(`/clients/${id}`);
+
   render() {
     const { 
       state: { searchText, localClients, showModal, form, nameRef },
@@ -132,7 +134,7 @@ class Clients extends Component {
   renderClientListItem = ({ id, name }) =>
     (
       <Item key={id} className="d-flex justify-content-between align-items-center">
-        <span>{name}</span>
+        <span onClick={_ => this.viewClient(id)}>{name}</span>
         <button onClick={_ => this.handleDeleteClient(id)} className="close">&times;</button>
       </Item>
     );
