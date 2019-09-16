@@ -18,7 +18,6 @@ class Clients extends Component {
 
   state = {
     searchText: '',
-    localClients: this.props.clients,
     form: {
       name: '',
       gender: 'female',
@@ -28,12 +27,7 @@ class Clients extends Component {
     nameRef: React.createRef()
   };
 
-  handleSearchTextChange = (e) => {
-    const searchText = e.target.value.trim(),
-      localClients = this.props.clients.filter(({ name }) => name.toLowerCase().includes(searchText.toLowerCase()));
-    
-    this.setState({ searchText, localClients });
-  }
+  handleSearchTextChange = ({ target: { value }}) => this.setState({ searchText: value.trim() });
 
   openModal = () => this.setState({ showModal: true }, () => this.state.nameRef.current.focus());
 
@@ -44,8 +38,7 @@ class Clients extends Component {
     form.phone = form.phone.trim();
     form.name = form.name.trim();
 
-    this.props.saveClient(form);
-    this.closeModal();
+    this.props.saveClient(form).then(() => this.closeModal());
   };
 
   isFormValid = () => {
@@ -57,23 +50,20 @@ class Clients extends Component {
       clients.every((c) => c.phone !== phone.trim());
   };
 
-  updateForm = (e) => this.setState({ form: { ...this.state.form, [e.target.name]: e.target.value } });
+  updateForm = ({ target: { name, value } }) => this.setState({ form: { ...this.state.form, [name]: value } });
 
   handleDeleteClient = (id) => {
-    const { state: { localClients } } = this;
-
     if (! confirm('Are you sure?')) return; // eslint-disable-line no-restricted-globals
 
     this.props.deleteClient(id);
-
-    this.setState({ localClients: localClients.filter((c) => c.id !== id) });
   };
 
   viewClient = (id) => this.props.history.push(`/clients/${id}`);
 
   render() {
     const { 
-      state: { searchText, localClients, showModal, form, nameRef },
+      props: { clients },
+      state: { searchText, showModal, form, nameRef },
       openModal,
       closeModal,
       createClient,
@@ -82,7 +72,8 @@ class Clients extends Component {
       renderEmptyView,
       updateForm,
       isFormValid
-    } = this;
+    } = this,
+      localClients = clients.filter(({ name }) => name.toLowerCase().includes(searchText.toLowerCase()));
 
     return (
       <Row>

@@ -11,6 +11,7 @@ module.exports = {
   'rules': {
     'react/prefer-stateless-function': 'off',
     'react/jsx-filename-extension': 'off',
+    'one-var': 'off',
     'no-new': 'off',
     'no-param-reassign': 'off',
     'no-plusplus': 'off',

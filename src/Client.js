@@ -148,7 +148,7 @@ class Client extends Component {
 }
 
 const mapStateToProps = ({ clients }, { match: { params: { id } } }) => 
-  ({ client: clients.find((c) => c.id === parseInt(id)), clients });
+  ({ client: clients.find((c) => c.id === id), clients });
 
 const mapDispatchToProps = (dispatch) => ({
   saveClient: (client) => dispatch(ACTIONS.saveClient(client))

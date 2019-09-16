@@ -1,13 +1,15 @@
 import { createStore, applyMiddleware } from 'redux';
 import logger from 'redux-logger';
+import thunk from 'redux-thunk';
 import reducer from './reducer';
+import ACTIONS from './actions';
 
 const initStore = () => {
-  const initialState = {
-    clients: []
-  };
+  const store = createStore(reducer, { clients: [] }, applyMiddleware(thunk, logger));
+  
+  store.dispatch(ACTIONS.loadClients());
 
-  return createStore(reducer, initialState, applyMiddleware(logger));
+  return store;
 };
 
 export default initStore;

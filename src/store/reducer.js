@@ -4,27 +4,24 @@ const defaultState = { clients: [] };
 
 const clientReducer = (state = defaultState, { type, payload }) => {
   switch (type) {
-    case ACTIONS.Types.SAVE_CLIENT: {
-      const { clients } = state;
+    case ACTIONS.Types.LOAD_CLIENTS: 
+      return { ...state, clients: payload };
 
-      if (!payload.id) {
-        payload.id = clients.length + 1;
-        payload.measurements = [];
+    case ACTIONS.Types.SAVE_CLIENT: {
+      const { clients } = state, 
+        index = clients.findIndex((c) => c.id === payload.id);
+
+      if (index === -1) {
         clients.push(payload);
       } else {
-        clients.splice(payload.id - 1, 1, payload);
+        clients[index] = payload;
       }
 
       return { ...state, clients };
     }
 
-    case ACTIONS.Types.DELETE_CLIENT: {
-      const { clients } = state;
-
-      clients.splice(payload - 1, 1);
-
-      return { ...state, clients };
-    }
+    case ACTIONS.Types.DELETE_CLIENT: 
+      return { ...state, clients: state.clients.filter((c) => c.id !== payload) };
 
     default:
       return state;
