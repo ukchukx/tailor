@@ -40,7 +40,11 @@ class Clients extends Component {
   closeModal = () => this.setState({ showModal: false, form: { name: '', gender: 'female', phone: '' } });
 
   createClient = () => {
-    this.props.saveClient(this.state.form);
+    const form = this.state.form;
+    form.phone = form.phone.trim();
+    form.name = form.name.trim();
+
+    this.props.saveClient(form);
     this.closeModal();
   };
 
