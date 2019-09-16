@@ -8,6 +8,7 @@ import Button from 'react-bootstrap/Button';
 import Modal, { Header, Footer, Body as ModalBody, Title as ModalTitle } from 'react-bootstrap/Modal';
 import { Control, Label } from 'react-bootstrap/Form';
 import ACTIONS from './store/actions';
+import Measurements from './Measurements';
 
 class Client extends Component {
   static propTypes = {
@@ -53,15 +54,35 @@ class Client extends Component {
 
   updateClientForm = (e) => this.setState({ clientForm: { ...this.state.clientForm, [e.target.name]: e.target.value } });
 
+  deleteMeasurement = (index) => {
+    const client = this.props.client;
+    client.measurements.splice(index, 1);
+    this.props.saveClient(client);
+  };
+
+  saveMeasurement = (m, index) => {
+    const client = this.props.client;
+
+    if (index !== -1) {
+      client.measurements[index] = m;
+    } else {
+      client.measurements.push(m);
+    }
+
+    this.props.saveClient(client);
+  };
+
   render() {
     const { 
-      props: { client: { name, gender, phone }, history },
+      props: { client, history },
       state: { showClientModal, clientForm, clientNameRef },
       openClientUpdateModal,
       closeClientModal,
       updateClientForm,
       updateClient,
-      isClientFormValid
+      isClientFormValid,
+      saveMeasurement,
+      deleteMeasurement
     } = this,
       buttonStyles = { padding: 0, border: 0, backgroundColor: 'transparent' };
 
@@ -73,16 +94,16 @@ class Client extends Component {
             <Title>
               <button onClick={_ => history.replace('/clients')} style={buttonStyles}>&larr;</button>
               &emsp;
-              {name}
+              {client.name}
             </Title>
-            <p className="text-muted">Phone: {phone}</p>
-            <p className="text-muted">Gender: {gender}</p>
+            <p className="text-muted">Phone: {client.phone}</p>
+            <p className="text-muted">Gender: {client.gender}</p>
 
             <Button size="sm" variant="outline-primary" onClick={openClientUpdateModal}>Update</Button>
 
             <Modal show={showClientModal} onHide={closeClientModal} animation={false}>
               <Header closeButton>
-                <ModalTitle>Update {name}</ModalTitle>
+                <ModalTitle>Update {client.name}</ModalTitle>
               </Header>
               <ModalBody>
                 <Label className="mt-2">Name</Label>
@@ -113,7 +134,11 @@ class Client extends Component {
         <Col sm={12} className="mt-3">
           <Card>
             <Body>
-              Measurements will go here...
+              <Measurements 
+                client={client}
+                deleteMeasurement={deleteMeasurement}
+                saveMeasurement={saveMeasurement}
+                />
             </Body>
           </Card>
         </Col>
