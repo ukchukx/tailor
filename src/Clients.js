@@ -129,7 +129,7 @@ class Clients extends Component {
   renderClientListItem = ({ id, name }) =>
     (
       <Item key={id} className="d-flex justify-content-between align-items-center">
-        <span onClick={_ => this.viewClient(id)}>{name}</span>
+        <span style={{ cursor: 'pointer' }} onClick={_ => this.viewClient(id)}>{name}</span>
         <button onClick={_ => this.handleDeleteClient(id)} className="close">&times;</button>
       </Item>
     );
