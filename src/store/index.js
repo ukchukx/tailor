@@ -5,7 +5,8 @@ import reducer from './reducer';
 import ACTIONS from './actions';
 
 const initStore = () => {
-  const store = createStore(reducer, { clients: [] }, applyMiddleware(thunk, logger));
+  const store = createStore(reducer, { clients: [] }, 
+    process.env.NODE_ENV === 'development' ? applyMiddleware(thunk, logger) : applyMiddleware(thunk));
   
   store.dispatch(ACTIONS.loadClients());
 
